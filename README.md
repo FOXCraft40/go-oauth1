@@ -1,9 +1,10 @@
 # Go-OAuth1.0
-Golang lightweight package/ implementation example of OAuth1.0 Authentication Header/ Signature calculation (Twitter etc..)
+// Fork form : https://github.com/klaidas/go-oauth1 //
+Golang lightweight package/ implementation example of OAuth1.0 Authentication Header/ Signature calculation (Twitter, CardMarked, ...)
 
 To quickly import the package into your project:
 > ```
->  go get github.com/klaidas/go-oauth1
+>  go get github.com/FOXCraft40/oauth1
 > ```
 
 &nbsp;
@@ -14,8 +15,9 @@ package main
 
 import (
 	"fmt"
-	oauth1 "go-oauth1"
 	"net/http"
+
+	"githum.com/FOXCraft40/oauth1"
 )
 
 func main() {
@@ -29,7 +31,7 @@ func main() {
 		AccessSecret: "LswwdoUaIvS8ltyTt5jkRh4J50vUPVVHtR2YPi5kE",
 	}
 
-	authHeader := auth.BuildOAuth1Header(method, url, map[string]string {
+	authHeader := auth.BuildOAuth1Header(method, url, false, map[string]string {
 		"include_entities": "true",
 		"status": "Hello Ladies + Gentlemen, a signed OAuth request!",
 	})

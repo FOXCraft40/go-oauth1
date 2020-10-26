@@ -1,4 +1,4 @@
-package go_oauth1
+package oauth1
 
 import (
 	"crypto/hmac"
@@ -11,22 +11,23 @@ import (
 	"time"
 )
 
+// OAuth1 //
 type OAuth1 struct {
-	ConsumerKey string
+	ConsumerKey    string
 	ConsumerSecret string
-	AccessToken string
-	AccessSecret string
+	AccessToken    string
+	AccessSecret   string
 }
 
-// Params being any key-value url query parameter pairs
-func (auth OAuth1) BuildOAuth1Header(method, path string, params map[string]string) string {
+// BuildOAuth1Header // Params being any key-value url query parameter pairs
+func (auth OAuth1) BuildOAuth1Header(method, path string, withRealm bool, params map[string]string) string {
 	vals := url.Values{}
 	vals.Add("oauth_nonce", generateNonce())
 	vals.Add("oauth_consumer_key", auth.ConsumerKey)
 	vals.Add("oauth_signature_method", "HMAC-SHA1")
 	vals.Add("oauth_timestamp", strconv.Itoa(int(time.Now().Unix())))
-	vals.Add("oauth_token", auth.AccessToken)
 	vals.Add("oauth_version", "1.0")
+	vals.Add("oauth_token", auth.AccessToken)
 
 	for k, v := range params {
 		vals.Add(k, v)
@@ -39,10 +40,20 @@ func (auth OAuth1) BuildOAuth1Header(method, path string, params map[string]stri
 	signingKey := url.QueryEscape(auth.ConsumerSecret) + "&" + url.QueryEscape(auth.AccessSecret)
 	signature := calculateSignature(signatureBase, signingKey)
 
-	return "OAuth oauth_consumer_key=\"" + url.QueryEscape(vals.Get("oauth_consumer_key")) + "\", oauth_nonce=\"" + url.QueryEscape(vals.Get("oauth_nonce")) +
-		"\", oauth_signature=\"" + url.QueryEscape(signature) + "\", oauth_signature_method=\"" + url.QueryEscape(vals.Get("oauth_signature_method")) +
-		"\", oauth_timestamp=\"" + url.QueryEscape(vals.Get("oauth_timestamp")) + "\", oauth_token=\"" + url.QueryEscape(vals.Get("oauth_token")) +
-		"\", oauth_version=\"" + url.QueryEscape(vals.Get("oauth_version")) + "\""
+	// Set realm
+	realm := ""
+	if withRealm {
+		realm = "realm=\"" + url.QueryEscape(strings.Split(path, "?")[0]) + "\", "
+	}
+
+	return "OAuth " + realm +
+		"oauth_consumer_key=\"" + url.QueryEscape(vals.Get("oauth_consumer_key")) + "\"" +
+		", oauth_token=\"" + url.QueryEscape(vals.Get("oauth_token")) + "\"" +
+		", oauth_nonce=\"" + url.QueryEscape(vals.Get("oauth_nonce")) + "\"" +
+		", oauth_signature_method=\"" + url.QueryEscape(vals.Get("oauth_signature_method")) + "\"" +
+		", oauth_timestamp=\"" + url.QueryEscape(vals.Get("oauth_timestamp")) + "\"" +
+		", oauth_version=\"" + url.QueryEscape(vals.Get("oauth_version")) + "\"" +
+		", oauth_signature=\"" + url.QueryEscape(signature) + "\""
 }
 
 func calculateSignature(base, key string) string {
