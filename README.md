@@ -17,7 +17,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"githum.com/FOXCraft40/oauth1"
+	"github.com/FOXCraft40/oauth1"
 )
 
 func main() {
