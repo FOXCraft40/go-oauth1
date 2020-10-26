@@ -1,5 +1,5 @@
 # Go-OAuth1.0
-// Fork form : https://github.com/klaidas/go-oauth1 //
+__ Fork form : https://github.com/klaidas/go-oauth1 __  
 Golang lightweight package/ implementation example of OAuth1.0 Authentication Header/ Signature calculation (Twitter, CardMarked, ...)
 
 To quickly import the package into your project:
