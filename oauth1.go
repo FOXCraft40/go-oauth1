@@ -1,4 +1,4 @@
-package oauth1
+package ezOauth1
 
 import (
 	"crypto/hmac"
